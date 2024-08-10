@@ -2,6 +2,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
+def plot_correlation_heatmap(df, target_variable):
+    """
+    Plot a correlation heatmap of the features, including the target variable.
+    
+    Parameters:
+    - df: pd.DataFrame - The DataFrame containing features and the target variable.
+    - target_variable: str - The name of the target variable.
+    """
+    correlation_matrix = df.corr()
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+    plt.title('Correlation Heatmap')
+    plt.show()
+
+
 def plot_heat_map(X, y, step=10):
     """
     Plots correlation heatmaps for every `step` features in the DataFrame `X`,
@@ -56,21 +71,30 @@ def plot_traing_process(cv_data):
     plt.legend()
     plt.grid()
     plt.show()
+    
 
 def check_missing_values(df):
     """
-    Check for missing values in the DataFrame.
+    Check for missing values in the DataFrame and return the percentage of nulls for every column.
     
     Parameters:
     - df: pd.DataFrame - The DataFrame to check.
     
     Returns:
-    - pd.DataFrame - A DataFrame showing columns with missing values and their percentage.
+    - pd.DataFrame - A DataFrame showing columns with their percentage of missing values.
     """
+    # Calculate the number of missing values per column
     missing_values = df.isnull().sum()
+    
+    # Calculate the percentage of missing values per column
     missing_percentage = 100 * missing_values / len(df)
+    
+    # Create a DataFrame to summarize missing values and their percentages
     missing_df = pd.DataFrame({'Missing Values': missing_values, 'Percentage': missing_percentage})
-    return missing_df[missing_df['Missing Values'] > 0].sort_values(by='Percentage', ascending=False)
+    
+    # Return all columns with their percentage of missing values, sorted by percentage
+    return missing_df.sort_values(by='Percentage', ascending=False)
+
 
 
 def plot_feature_distributions(df, target_variable):
